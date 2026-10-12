@@ -143,6 +143,8 @@ table.tt{border-collapse:collapse;width:100%;min-width:360px;font-size:16px;dire
 @keyframes shake{25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-3px)}}
 .fb{margin-top:8px;font-weight:600;font-size:16px}
 
+.vplay{display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:space-between;margin-top:18px;padding:14px 18px;border-radius:24px;background:color-mix(in srgb,var(--u) 42%,var(--card));border:2px dashed var(--line)}
+.vplay b{font-size:20px}
 /* games grid */
 .ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;margin-top:18px}
 .gcard{border-radius:28px;padding:6px;background:color-mix(in srgb,var(--u) 40%,transparent);text-align:start;transition:transform .55s var(--spring)}
@@ -820,9 +822,10 @@ function renderUnit(u,tab){
 
 function learnHTML(u){
  let h="";
- u.vocab.forEach(g=>{h+=`<section class="block reveal"><h3>🗣️ ${g.g}</h3><div class="vhint">اضغط البطاقة لتسمع الكلمة وترى معناها بالعربي</div><div class="vgrid">
+ u.vocab.forEach((g,vgi)=>{h+=`<section class="block reveal"><h3>🗣️ ${g.g}</h3><div class="vhint">اضغط البطاقة لتسمع الكلمة وترى معناها بالعربي</div><div class="vgrid">
   ${g.items.map(([e,w,a])=>`<div class="vcard" onclick="this.classList.toggle('flip');say(this.dataset.w)" data-w="${esc(w)}" tabindex="0" role="button" onkeydown="if(event.key==='Enter')this.click()"><div class="in"><div class="vface f"><div class="e">${e}</div><div class="w en">${w}</div></div><div class="vface b"><div class="e">${e}</div><div class="ar">${a}</div><div class="w en" style="font-size:14px;opacity:.7">${w}</div></div></div></div>`).join("")}
- </div></section>`});
+ </div>${vBtn(u,vgi)}</section>`});
+ if(u.vocab.length>1)h+=`<section class="block reveal">${vBtn(u,"all")}</section>`;
  u.grammar.forEach((g,gi)=>{
   h+=`<section class="block reveal"><h3>📐 <span class="en">${g.t}</span> — ${g.tar} <span class="tag book">📗 الكتاب ${g.page}</span></h3>
   <div class="bi"><div class="arx"><h4>بالعربي</h4>${g.ar}</div><div class="enx en"><h4>In English</h4>${g.en}</div></div>`;
@@ -849,11 +852,14 @@ function gamesHTML(u){
 function openOv(html,color){const r=$("#ovRoot");r.innerHTML=`<div class="ov" id="ov" style="--u:${color||"#D6F1EB"}" onclick="if(event.target.id==='ov')closeOv()"><div class="panel" role="dialog" aria-modal="true">${html}</div></div>`;requestAnimationFrame(()=>$("#ov").classList.add("show"));document.body.style.overflow="hidden"}
 function closeOv(instant){const o=$("#ov");document.body.style.overflow="";try{speechSynthesis.cancel()}catch(e){}if(!o)return;if(instant){o.remove();return}o.classList.remove("show");setTimeout(()=>o.remove(),450)}
 function head(title,extra){return `<div class="phead"><h2>${title}</h2><div style="display:flex;gap:8px;align-items:center">${extra||""}<button class="iconbtn" onclick="closeOv()" aria-label="إغلاق">✖</button></div></div>`}
-function markGame(uid,i){S.games[uid]=S.games[uid]||[];if(!S.games[uid].includes(i))S.games[uid].push(i);save()}
+function markGame(uid,i){if(typeof i==="string"){S.vg=S.vg||{};S.vg[uid]=S.vg[uid]||[];if(!S.vg[uid].includes(i))S.vg[uid].push(i);save();return}
+ S.games[uid]=S.games[uid]||[];if(!S.games[uid].includes(i))S.games[uid].push(i);save()}
 function winScreen(u,i,msg){confetti();beep(true);markGame(u.id,i);
- $(".panel").innerHTML=head("🎉 أحسنت!")+`<div class="result"><div class="big">🏅</div><h2>${msg}</h2><p>حصلت على نجمة ⭐</p><div class="pfoot" style="justify-content:center"><button class="cta soft" onclick="openGame('${u.id}',${i})">العب مرة ثانية<span class="ic">🔁</span></button><button class="cta" onclick="closeOv();renderUnit(UNITS.find(x=>x.id==='${u.id}'),'games')">لعبة أخرى<span class="ic">🎮</span></button></div></div>`}
+ $(".panel").innerHTML=head("🎉 أحسنت!")+`<div class="result"><div class="big">🏅</div><h2>${msg}</h2><p>${typeof i==="string"?"كل ما لعبت أكثر، حفظت الكلمات أكثر 🧠":"حصلت على نجمة ⭐"}</p><div class="pfoot" style="justify-content:center"><button class="cta soft" onclick="openGame('${u.id}',${gq(i)})">العب مرة ثانية<span class="ic">🔁</span></button><button class="cta" onclick="${typeof i==="string"?`closeOv();openVMenu('${u.id}','${i.split('-')[0].slice(1)}')`:`closeOv();renderUnit(UNITS.find(x=>x.id==='${u.id}'),'games')`}">لعبة أخرى<span class="ic">🎮</span></button></div></div>`}
 
-function openGame(uid,i){const u=UNITS.find(x=>x.id===uid),g=u.games[i];
+function openGame(uid,i){const u=UNITS.find(x=>x.id===uid);
+ if(typeof i==="string"){const m=i.match(/^v(all|\d+)-(\d+)$/),gi=m[1]==="all"?"all":+m[1],g=vGames(u,gi)[+m[2]];({pick:gPick,match:gMatch,build:gBuild,learn:gLearn})[g.type](u,g,i);return}
+ const g=u.games[i];
  ({pick:gPick,match:gMatch,sort:gSort,build:gBuild})[g.type](u,g,i)}
 
 /* ---- pick game ---- */
@@ -874,14 +880,14 @@ function gPick(u,g,gi){let items=shuffle(g.items),k=0,hearts=3,score=0;
    if(ok){b.classList.add("ok");score++;beep(true);say(it.a);$("#gfb").innerHTML=`<div class="explain good">✅ ${["رائع!","ممتاز!","أحسنت!","برافو!"][k%4]}</div>`;k++;setTimeout(draw,900)}
    else{b.classList.add("no");hearts--;beep(false);document.querySelectorAll(".choice").forEach(x=>{if(x.dataset.o===it.a)x.classList.add("ok")});
     $("#gfb").innerHTML=`<div class="explain oops">الإجابة الصحيحة: <b class="en">${it.a}</b></div>`;
-    if(hearts<=0){setTimeout(()=>{$(".panel").innerHTML=head("😅 انتهت القلوب")+`<div class="result"><div class="big">🐢</div><h2>لا بأس! التعلّم يحتاج محاولات</h2><p>راجع الشرح ثم جرّب مرة ثانية.</p><div class="pfoot" style="justify-content:center"><button class="cta" onclick="openGame('${u.id}',${gi})">حاول مرة ثانية<span class="ic">🔁</span></button></div></div>`},1300)}
+    if(hearts<=0){setTimeout(()=>{$(".panel").innerHTML=head("😅 انتهت القلوب")+`<div class="result"><div class="big">🐢</div><h2>لا بأس! التعلّم يحتاج محاولات</h2><p>راجع الشرح ثم جرّب مرة ثانية.</p><div class="pfoot" style="justify-content:center"><button class="cta" onclick="openGame('${u.id}',${gq(gi)})">حاول مرة ثانية<span class="ic">🔁</span></button></div></div>`},1300)}
     else{k++;setTimeout(draw,1500)}}})}
  draw()}
 
 /* ---- memory match ---- */
 function gMatch(u,g,gi){const cards=shuffle(g.pairs.flatMap((p,i)=>[{i,t:p[0]},{i,t:p[1]}]));let open=[],got=0,moves=0,lock=false;
  openOv(head(`${g.e} ${g.tar}`,`<span class="pill" id="mv">🔄 0</span>`)+`<p style="margin:0 0 12px;color:var(--ink2)">اقلب بطاقتين. إذا كانتا متطابقتين تبقيان مفتوحتين!</p><div class="mgrid">${cards.map((c,k)=>{const isEmo=/\p{Extended_Pictographic}/u.test(c.t)&&c.t.length<=4;return `<button class="mc" data-k="${k}" aria-label="بطاقة"><div class="in"><div class="fa fr">❔</div><div class="fa bk en">${isEmo?`<span class="emo2">${c.t}</span>`:c.t}</div></div></button>`}).join("")}</div>`,u.color);
- document.querySelectorAll(".mc").forEach(el=>el.onclick=()=>{if(lock||el.classList.contains("open")||el.classList.contains("got"))return;const c=cards[+el.dataset.k];el.classList.add("open");if(!/\p{Extended_Pictographic}/u.test(c.t))say(c.t);open.push(el);
+ document.querySelectorAll(".mc").forEach(el=>el.onclick=()=>{if(lock||el.classList.contains("open")||el.classList.contains("got"))return;const c=cards[+el.dataset.k];el.classList.add("open");if(/[A-Za-z]/.test(c.t))say(c.t);open.push(el);
   if(open.length===2){moves++;$("#mv").textContent="🔄 "+moves;const[a,b]=open;const ca=cards[+a.dataset.k],cb=cards[+b.dataset.k];
    if(ca.i===cb.i){a.classList.add("got");b.classList.add("got");open=[];got++;beep(true);if(got===g.pairs.length)setTimeout(()=>winScreen(u,gi,`أنهيت اللعبة في ${moves} محاولة!`),700)}
    else{lock=true;beep(false);setTimeout(()=>{a.classList.remove("open");b.classList.remove("open");open=[];lock=false},900)}}})}
@@ -905,7 +911,7 @@ function gSort(u,g,gi){const items=shuffle(g.items);let k=0,mist=0;const placed=
 function gBuild(u,g,gi){const items=shuffle(g.items);let k=0;
  openOv("",u.color);
  function draw(){if(k>=items.length){winScreen(u,gi,"رتّبت كل الجمل! 🧱");return}
-  const [sent,ar]=items[k];const words=sent.split(" ");let order=shuffle(words.map((w,i)=>({w,i})));
+  const [sent,ar,lt]=items[k];const words=lt?[...sent]:sent.split(" ");let order=shuffle(words.map((w,i)=>({w,i})));
   if(order.every((o,i)=>o.i===i)&&words.length>1)order=order.reverse();
   let picked=[];
   $(".panel").innerHTML=head(`${g.e} ${g.tar}`)+`<div class="gbar"><i style="transform:scaleX(${k/items.length})"></i></div>
@@ -917,11 +923,66 @@ function gBuild(u,g,gi){const items=shuffle(g.items);let k=0;
    slot.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{picked.splice(+c.dataset.p,1);slot.classList.remove("no");refresh()})}
   document.querySelectorAll("#chips .chip").forEach(c=>c.onclick=()=>{const j=+c.dataset.j;if(picked.includes(j))return;picked.push(j);refresh()});
   $("#hint").onclick=()=>{picked=[];const first=order.findIndex(o=>o.i===0);picked.push(first);refresh();say(sent)};
-  $("#chk").onclick=()=>{const built=picked.map(j=>order[j].w).join(" ");
+  $("#chk").onclick=()=>{const built=picked.map(j=>order[j].w).join(lt?"":" ");
    if(built===sent){slot.classList.add("ok");beep(true);say(sent);k++;setTimeout(draw,1300)}
    else{slot.classList.remove("no");void slot.offsetWidth;slot.classList.add("no");beep(false)}};
   refresh()}
  draw()}
+
+
+/* ---- step-by-step memorizer: learn 4 words, test them, repeat the missed ones ---- */
+function gLearn(u,g,gi){const all=g.items,batches=[];let bi=0,learned=0;
+ for(let i=0;i<all.length;i+=4)batches.push(all.slice(i,i+4));
+ if(batches.length>1&&batches[batches.length-1].length<3){const l=batches.pop();batches[batches.length-1].push(...l)}
+ openOv("",u.color);
+ const bar=()=>`<div class="gbar"><i style="transform:scaleX(${learned/all.length})"></i></div>`;
+ function study(){const b=batches[bi];
+  $(".panel").innerHTML=head(`${g.e} ${g.tar}`,`<span class="pill">${bi+1} / ${batches.length}</span>`)+bar()+
+   `<p style="margin:0 0 10px;color:var(--ink2);font-weight:700">١) شوف الكلمات، اسمعها، وكررها بصوتك 🗣️</p><div class="ex-list">${b.map(x=>`<div class="ex" style="padding:10px 14px">${sayBtn(x[1])}<span style="font-size:34px">${x[0]}</span><div style="flex:1"><div class="en" style="font-size:22px;font-weight:800">${x[1]}</div><div class="ar2">${x[2]}</div></div></div>`).join("")}</div>
+   <div class="pfoot"><button class="cta soft" id="hear">اسمعها كلها<span class="ic">🔊</span></button><button class="cta" id="go">جرّب نفسك<span class="ic">▶</span></button></div>`;
+  $("#hear").onclick=()=>{b.forEach((x,i)=>setTimeout(()=>say(x[1]),i*1500))};
+  $("#go").onclick=()=>check(shuffle(b).map(x=>({x,n:0})))}
+ function check(q){
+  if(!q.length){learned+=batches[bi].length;bi++;if(bi>=batches.length){winScreen(u,gi,`حفظت ${all.length} كلمة! 🌟`);return}study();return}
+  const c=q[0],x=c.x,pic=c.n%2===0;
+  const prompt=pic?`<div class="big">${x[0]}</div><div style="font-size:16px">وش هي الكلمة؟</div>`:`<button class="say" style="width:96px;height:96px;font-size:44px" onclick="say('${esc(x[1])}')">🔊</button><div style="font-size:17px">اسمع واختر</div>`;
+  $(".panel").innerHTML=head(`${g.e} ${g.tar}`,`<span class="pill">${bi+1} / ${batches.length}</span>`)+bar()+
+   `<p style="margin:0 0 8px;color:var(--ink2);font-weight:700">٢) جرّب نفسك — الكلمة اللي تغلط فيها ترجع لك مرة ثانية</p><div class="prompt">${prompt}</div>
+   <div class="choices">${vOpts(x[1],1,batches[bi],u).map(o=>`<button class="choice en" data-o="${esc(o)}">${o}</button>`).join("")}</div><div id="gfb"></div>`;
+  if(!pic)setTimeout(()=>say(x[1]),350);
+  document.querySelectorAll(".choice").forEach(b=>b.onclick=()=>{
+   const ok=b.dataset.o===x[1];document.querySelectorAll(".choice").forEach(y=>y.disabled=true);
+   if(ok){b.classList.add("ok");beep(true);say(x[1]);$("#gfb").innerHTML=`<div class="explain good">✅ ${x[0]} <span class="en">${x[1]}</span> = ${x[2]}</div>`;q.shift();setTimeout(()=>check(q),1000)}
+   else{b.classList.add("no");beep(false);document.querySelectorAll(".choice").forEach(y=>{if(y.dataset.o===x[1])y.classList.add("ok")});
+    $("#gfb").innerHTML=`<div class="explain oops">الإجابة: ${x[0]} <b class="en">${x[1]}</b> = ${x[2]} — ركّز عليها وبترجع لك 👀</div>`;c.n++;q.push(q.shift());setTimeout(()=>check(q),2200)}})}
+ study()}
+
+/* ============ VOCAB MEMORIZATION GAMES ============ */
+const gq=i=>typeof i==="string"?`'${i}'`:i;
+const arClean=a=>String(a).replace(/\s*\([^)]*\)/g,"").trim();
+function vItems(u,gi){const src=gi==="all"?u.vocab.flatMap(g=>g.items):u.vocab[gi].items,seen={};
+ return src.filter(x=>!seen[x[1]]&&(seen[x[1]]=1)).map(([e,en,ar])=>[e,en,arClean(ar)])}
+function vOpts(right,f,it,u){const uniq=a=>[...new Set(a)].filter(x=>x!==right);
+ let pool=uniq(it.map(x=>x[f]));
+ if(pool.length<3)pool=uniq(pool.concat(shuffle(u.vocab.flatMap(g=>g.items).map(x=>f===2?arClean(x[f]):x[f]))));
+ if(pool.length<3)pool=uniq(pool.concat(shuffle(UNITS.flatMap(x=>x.vocab.flatMap(g=>g.items)).map(x=>f===2?arClean(x[f]):x[f]))));
+ return shuffle([right,...shuffle(pool).slice(0,3)])}
+function vGames(u,gi){const it=vItems(u,gi),pk=n=>shuffle(it).slice(0,n),n=Math.min(it.length,10),G=[];
+ G.push({type:"learn",e:"🌟",t:"Step-by-step memorizer",tar:"احفظ خطوة خطوة (الأسهل)",items:pk(Math.min(it.length,12)),pool:it});
+ G.push({type:"match",e:"🧩",t:"Picture match",tar:"طابق الصورة مع الكلمة",pairs:pk(Math.min(8,it.length)).map(x=>[x[0],x[1]])});
+ G.push({type:"match",e:"🔤",t:"Meaning match",tar:"طابق الكلمة مع معناها",pairs:pk(Math.min(8,it.length)).map(x=>[x[1],x[2]])});
+ G.push({type:"pick",e:"👂",t:"Listen & choose",tar:"اسمع واختر الكلمة",items:pk(n).map(x=>({say:x[1],o:vOpts(x[1],1,it,u),a:x[1]}))});
+ G.push({type:"pick",e:"🖼️",t:"Picture quiz",tar:"شف الصورة واختر الكلمة",items:pk(n).map(x=>({p:x[0],o:vOpts(x[1],1,it,u),a:x[1]}))});
+ G.push({type:"pick",e:"🌍",t:"Arabic to English",tar:"من العربي إلى الإنجليزي",items:pk(n).map(x=>({p:`<span style="font-size:30px">${x[2]}</span>`,o:vOpts(x[1],1,it,u),a:x[1]}))});
+ G.push({type:"pick",e:"🧠",t:"What does it mean?",tar:"وش معنى الكلمة؟",items:pk(n).map(x=>({p:`<span class="en" style="font-size:34px">${x[1]}</span>`,o:vOpts(x[2],2,it,u),a:x[2]}))});
+ const sp=it.filter(x=>!/–/.test(x[1])&&x[1].length>=3&&x[1].length<=14);
+ if(sp.length>=2)G.push({type:"build",e:"✍️",t:"Spelling builder",tar:"رتّب الحروف أو الكلمات",items:shuffle(sp).slice(0,6).map(x=>[x[1],`${x[0]} ${x[2]}`,!/\s/.test(x[1])])});
+ return G}
+function vBtn(u,gi){const n=vGames(u,gi).length,d=((S.vg||{})[u.id]||[]).filter(x=>x.startsWith("v"+gi+"-")).length;
+ return `<div class="vplay" style="--u:${u.color}"><div><b>🧠 ${gi==="all"?"احفظ كل كلمات الدرس":"احفظ كلمات هذا القسم"}</b><div style="color:var(--ink2);font-size:15px">${n} ألعاب • أنجزت ${d} من ${n}</div></div><button class="cta sun" onclick="openVMenu('${u.id}','${gi}')">العب الآن<span class="ic">🎮</span></button></div>`}
+function openVMenu(uid,k){const u=UNITS.find(x=>x.id===uid),gi=k==="all"?"all":+k,gs=vGames(u,gi),done=(S.vg||{})[uid]||[];
+ const title=gi==="all"?`كل كلمات ${u.ar}`:u.vocab[gi].g;
+ openOv(head("🧠 ألعاب حفظ الكلمات")+`<p style="margin:0;color:var(--ink2);font-weight:700">${title}</p><div class="ggrid" style="margin-top:10px">${gs.map((g,i)=>{const id=`v${k}-${i}`;return `<button class="gcard" style="--u:${u.color}" onclick="openGame('${uid}','${id}')"><div class="core">${done.includes(id)?`<span class="done">✓ أنجزتها</span>`:""}<div class="e">${g.e}</div><b>${g.tar}</b><small class="en" style="text-align:right">${g.t}</small></div></button>`}).join("")}</div>`,u.color)}
 
 /* ============ QUIZ ENGINE ============ */
 function quizIntroHTML(u){const best=S.quiz[u.id]||0;
