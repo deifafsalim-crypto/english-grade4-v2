@@ -323,17 +323,24 @@ const UNITS = [
 },
 {
  id:"u1", num:"1", color:"#C9EBD6", emoji:"🏫", title:"New school", ar:"مدرسة جديدة", pages:"ص 14–35",
- intro:"المواد الدراسية، الوقت، كم مرة نفعل الأشياء، والمضارع البسيط.",
+ intro:"المواد الدراسية، الأشخاص والأماكن في المدرسة، الوقت، كم مرة نفعل الأشياء، والمضارع البسيط.",
  vocab:[
   {g:"School subjects – المواد الدراسية", items:[
    ["🔢","Maths","الرياضيات"],["🔬","Science","العلوم"],["✍️","Arabic","اللغة العربية"],["🕌","Islamic Studies","التربية الإسلامية"],["🔤","English","اللغة الإنجليزية"],
    ["🌍","Social Studies","الدراسات الاجتماعية"],["🤸","P.E.","الرياضة البدنية"],["💻","ICT","تقنية المعلومات"],["🎨","Art","الفنون"]]},
-  {g:"People & places – أشخاص وأماكن", items:[["🧪","science lab","مختبر العلوم"],["👩‍🏫","headteacher","مديرة المدرسة"],["👩‍⚕️","school nurse","ممرضة المدرسة"]]},
-  {g:"How often? – كم مرة؟", items:[
-   ["✅✅✅","always","دائماً"],["✅✅","often","غالباً"],["✅","sometimes","أحياناً"],["❌","never","أبداً"],["📅","every day","كل يوم"],
-   ["1️⃣","once a week","مرة في الأسبوع"],["2️⃣","twice a week","مرتين في الأسبوع"],["3️⃣","three times a week","ثلاث مرات في الأسبوع"],["🏖️","at the weekend","في عطلة نهاية الأسبوع"]]}
+  {g:"People at school – أشخاص في المدرسة", items:[["👩‍🏫","headteacher","مدير/مديرة المدرسة"],["👩‍⚕️","school nurse","ممرضة المدرسة"],["🧑‍🏫","teacher","معلم/معلمة"],["🧑‍🎓","student","طالب/طالبة"]]},
+  {g:"Places at school – أماكن في المدرسة", items:[["🧪","science lab","مختبر العلوم"],["🪑","classroom","غرفة الصف"],["📚","library","المكتبة"],["🛝","playground","ساحة اللعب"]]},
+  {g:"Frequency adverbs – ظروف التكرار", items:[
+   ["✅✅✅","always","دائماً"],["👍","usually","عادةً"],["✅✅","often","غالباً"],["✅","sometimes","أحياناً"],["🤏","hardly ever","نادراً جداً"],["❌","never","أبداً"],["📅","every day","كل يوم"],
+   ["🏖️","at the weekend","في عطلة نهاية الأسبوع"],["1️⃣","once a week","مرة في الأسبوع"],["2️⃣","twice a week","مرتين في الأسبوع"],["3️⃣","three times a week","ثلاث مرات في الأسبوع"],["🌙","once a month","مرة في الشهر"]]}
+
  ],
  grammar:[
+  {t:"People and places at school", tar:"الأشخاص والأماكن في المدرسة", page:"الدرس 10",
+   ar:"<b class='en'>teacher</b> هو من يعلّمك في الصف، و<b class='en'>headteacher</b> هو المدير (الكبير) المسؤول عن المدرسة كلها، و<b class='en'>school nurse</b> تساعدك إذا تعبت، و<b class='en'>student</b> هو أنت يا طالب! 😊<br>وللأماكن نستخدم <b class='en'>in</b> قبل اسم المكان: <span class='en'>in the classroom, in the library, in the science lab, in the playground</span>.",
+   en:"A <b>teacher</b> teaches you. The <b>headteacher</b> is in charge of the school. The <b>school nurse</b> helps when you feel ill. You are a <b>student</b>. Use <b>in the</b> + place: in the library, in the playground.",
+   ex:[["The teacher is in the classroom.","المعلمة في غرفة الصف."],["I read books in the library.","أقرأ كتباً في المكتبة."],["We play football in the playground.","نلعب كرة القدم في ساحة اللعب."],["We have Science in the science lab.","عندنا علوم في مختبر العلوم."],["The school nurse helps students.","ممرضة المدرسة تساعد الطلاب."]],
+   mini:{q:"We play in the ____.", o:["playground","library","classroom"], a:"playground", ex:"ساحة اللعب = playground، مكان اللعب والجري."}},
   {t:"Telling the time", tar:"كيف نقول الوقت", page:"ص 18",
    ar:"<span class='en'>o'clock</span> = الساعة تماماً • <span class='en'>quarter past</span> = وربع • <span class='en'>half past</span> = ونص • <span class='en'>quarter to</span> = إلا ربع.<br>مثال: 7:30 = <b class='en'>half past seven</b> و 9:45 = <b class='en'>quarter to ten</b> (لأنها قبل العاشرة بربع ساعة).",
    en:"8:00 = eight o'clock • 11:15 = quarter past eleven • 10:30 = half past ten • 9:45 = quarter to ten.",
@@ -346,9 +353,9 @@ const UNITS = [
    table:true,
    mini:{q:"📗 Lottie's timetable: What does she do at quarter past eight on Sundays?", o:["She has Science.","She goes home.","She has Maths."], a:"She has Science.", ex:"في الجدول: 8:15 Science."}},
   {t:"Adverbs of frequency", tar:"كلمات التكرار (كم مرة؟)", page:"ص 19",
-   ar:"كلمات <span class='en'>always, often, sometimes, never</span> تأتي <b>قبل الفعل</b>: <span class='en'>He always eats fish.</span> لكن تأتي <b>بعد</b> <span class='en'>is / am / are</span>: <span class='en'>She is always busy.</span><br>أما عبارات <span class='en'>every day, twice a week, once a week, at the weekend</span> فتأتي في <b>آخر الجملة</b>.",
-   en:"<b>always / often / sometimes / never</b> go <b>before</b> the main verb but <b>after</b> be. Phrases like <b>twice a week</b> go at the end.",
-   ex:[["She plays tennis twice a week.","هي تلعب التنس مرتين في الأسبوع."],["I do my homework every day.","أحل واجبي كل يوم."],["She is always busy.","هي دائماً مشغولة."],["He always eats fish for lunch.","هو دائماً يأكل السمك على الغداء."]],
+   ar:"نرتّب الكلمات من الأكثر إلى الأقل: <span class='en'>always (100%) → usually → often → sometimes → hardly ever → never (0%)</span>. فكّر في أيام الدراسة: <b class='en'>always</b> = كل يوم، <b class='en'>usually</b> = تقريباً كل يوم (4 من 5)، <b class='en'>often</b> = كثير من الأيام، <b class='en'>sometimes</b> = بعض الأيام، <b class='en'>hardly ever</b> = نادراً جداً، <b class='en'>never</b> = صفر.<br>هذه الكلمات تأتي <b>قبل الفعل</b>: <span class='en'>He usually eats fish.</span> لكن تأتي <b>بعد</b> <span class='en'>is / am / are</span>: <span class='en'>She is always busy.</span><br>أما عبارات <span class='en'>every day, once a week, twice a week, three times a week, once a month, at the weekend</span> فتأتي في <b>آخر الجملة</b>.",
+   en:"<b>always / usually / often / sometimes / hardly ever / never</b> go <b>before</b> the main verb but <b>after</b> be. Phrases like <b>twice a week</b> or <b>once a month</b> go at the end.",
+   ex:[["She plays tennis twice a week.","هي تلعب التنس مرتين في الأسبوع."],["I do my homework every day.","أحل واجبي كل يوم."],["She is always busy.","هي دائماً مشغولة."],["He always eats fish for lunch.","هو دائماً يأكل السمك على الغداء."],["We usually play in the playground.","نلعب عادةً في ساحة اللعب."],["I hardly ever go to the library.","نادراً جداً ما أذهب إلى المكتبة."],["We visit the science lab once a month.","نزور مختبر العلوم مرة في الشهر."]],
    mini:{q:"Choose the correct sentence:", o:["He is always busy.","He always is busy.","Always he is busy."], a:"He is always busy.", ex:"always تأتي بعد is."}},
   {t:"Making arrangements", tar:"الاتفاق على موعد", page:"ص 21",
    ar:"لندعو صديقاً نقول <b class='en'>Do you want to …?</b> وللرفض بلطف: <b class='en'>Sorry, I can't.</b> أو <b class='en'>I'm not free.</b> ونقترح موعداً آخر: <b class='en'>What about Saturday?</b> ثم نتفق: <b class='en'>Let's meet at …</b>",
@@ -366,7 +373,7 @@ const UNITS = [
  ],
  games:[
   {type:"sort", e:"🗂️", t:"School sort", tar:"صنّف: مواد، أشخاص، أماكن", buckets:[["sub","School subjects","📚"],["ppl","People","🧑‍🏫"],["plc","Places","🏫"]],
-   items:[["Maths","sub"],["ICT","sub"],["Art","sub"],["Science","sub"],["P.E.","sub"],["headteacher","ppl"],["school nurse","ppl"],["teacher","ppl"],["science lab","plc"],["classroom","plc"],["library","plc"]]},
+   items:[["Maths","sub"],["ICT","sub"],["Art","sub"],["Science","sub"],["P.E.","sub"],["headteacher","ppl"],["school nurse","ppl"],["teacher","ppl"],["student","ppl"],["science lab","plc"],["classroom","plc"],["library","plc"],["playground","plc"]]},
   {type:"pick", e:"⏰", t:"Clock challenge", tar:"اقرأ الساعة", items:[
     {clock:[7,30],o:["half past seven","quarter past seven","seven o'clock"],a:"half past seven"},
     {clock:[11,15],o:["quarter past eleven","quarter to eleven","half past eleven"],a:"quarter past eleven"},
@@ -380,7 +387,15 @@ const UNITS = [
     {p:"🪁 <span class='en'>k_t_</span>",o:["i-e","igh","y"],a:"i-e"},{p:"💡 <span class='en'>l__t</span>",o:["igh","ie","y"],a:"igh"},{p:"🙈 <span class='en'>sh__</span>",o:["y","igh","i-e"],a:"y"},{p:"🚲 <span class='en'>b_k_</span>",o:["i-e","ie","y"],a:"i-e"}]},
   {type:"build", e:"🧱", t:"Sentence builder", tar:"رتّب الجملة", items:[
     ["She plays tennis twice a week.","هي تلعب التنس مرتين في الأسبوع."],["We have Maths on Tuesdays.","عندنا رياضيات أيام الثلاثاء."],["I do my homework every day.","أحل واجبي كل يوم."],["Do you want to play football?","هل تريد أن تلعب كرة القدم؟"]]},
-  {type:"match", e:"🧩", t:"Subject memory", tar:"ذاكرة: الكلمة وصورتها", pairs:[["Maths","🔢"],["Science","🔬"],["Art","🎨"],["ICT","💻"],["P.E.","🤸"],["school nurse","👩‍⚕️"]]}
+  {type:"match", e:"🧩", t:"Subject memory", tar:"ذاكرة: الكلمة وصورتها", pairs:[["Maths","🔢"],["Science","🔬"],["Art","🎨"],["ICT","💻"],["P.E.","🤸"],["school nurse","👩‍⚕️"]]},
+  {type:"pick", e:"📊", t:"How often? (scale)", tar:"كم مرة؟ اقرأ أيام الأسبوع", items:[{p:"✅✅✅✅✅<div style='font-size:15px'>أيام الدراسة (٥ أيام)</div>",o:["always", "sometimes", "never"],a:"always"},{p:"✅✅✅✅❌<div style='font-size:15px'>أيام الدراسة (٥ أيام)</div>",o:["usually", "hardly ever", "never"],a:"usually"},{p:"✅✅✅❌❌<div style='font-size:15px'>أيام الدراسة (٥ أيام)</div>",o:["often", "hardly ever", "never"],a:"often"},{p:"✅✅❌❌❌<div style='font-size:15px'>أيام الدراسة (٥ أيام)</div>",o:["sometimes", "always", "usually"],a:"sometimes"},{p:"✅❌❌❌❌<div style='font-size:15px'>أيام الدراسة (٥ أيام)</div>",o:["hardly ever", "always", "often"],a:"hardly ever"},{p:"❌❌❌❌❌<div style='font-size:15px'>أيام الدراسة (٥ أيام)</div>",o:["never", "always", "sometimes"],a:"never"}]},
+  {type:"pick", e:"📅", t:"How many times?", tar:"كم مرة في الأسبوع أو الشهر؟", items:[{p:"Mon ✅",o:["once a week", "twice a week", "every day"],a:"once a week"},{p:"Mon ✅ &nbsp; Thu ✅",o:["twice a week", "once a week", "three times a week"],a:"twice a week"},{p:"Sun ✅ &nbsp; Tue ✅ &nbsp; Thu ✅",o:["three times a week", "twice a week", "once a week"],a:"three times a week"},{p:"✅✅✅✅✅✅✅<div style='font-size:15px'>Sun – Sat</div>",o:["every day", "once a week", "at the weekend"],a:"every day"},{p:"🗓️ ✅<div style='font-size:15px'>مرة واحدة في الشهر</div>",o:["once a month", "once a week", "every day"],a:"once a month"},{p:"Fri ✅ &nbsp; Sat ✅",o:["at the weekend", "every day", "once a month"],a:"at the weekend"}]},
+  {type:"sort", e:"↔️", t:"Where does it go?", tar:"أين مكان الكلمة في الجملة؟", buckets:[["adv","Before the verb","➡️"],["end","At the end","🔚"]],
+   items:[["always","adv"],["usually","adv"],["often","adv"],["sometimes","adv"],["hardly ever","adv"],["never","adv"],["every day","end"],["once a week","end"],["twice a week","end"],["three times a week","end"],["once a month","end"],["at the weekend","end"]]},
+  {type:"match", e:"🏫", t:"School words memory", tar:"ذاكرة: أماكن وأشخاص المدرسة", pairs:[["teacher","🧑‍🏫"],["student","🧑‍🎓"],["library","📚"],["playground","🛝"],["classroom","🪑"],["science lab","🧪"]]},
+  {type:"match", e:"🔤", t:"Adverb meanings", tar:"طابق كلمة التكرار مع معناها", pairs:[["always","دائماً"],["usually","عادةً"],["often","غالباً"],["sometimes","أحياناً"],["hardly ever","نادراً جداً"],["never","أبداً"]]},
+  {type:"build", e:"✍️", t:"School sentences", tar:"رتّب جمل المدرسة", items:[
+    ["We usually play in the playground.","نلعب عادةً في ساحة اللعب."],["I go to the library once a month.","أذهب إلى المكتبة مرة في الشهر."],["She hardly ever eats in the classroom.","هي نادراً جداً ما تأكل في غرفة الصف."],["The teacher is always in the classroom.","المعلمة دائماً في غرفة الصف."]]}
  ],
  quiz:[
   {q:"What time is it?", clock:[7,30], o:["half past seven","quarter past seven","half past six"], a:"half past seven", ex:"العقرب الكبير على 6 = half past."},
@@ -390,6 +405,14 @@ const UNITS = [
   {q:"We have English ____ Sundays ____ eight o'clock.", o:["on / at","at / on","in / at"], a:"on / at", ex:"on + اليوم، at + الساعة."},
   {q:"Choose the correct sentence:", o:["She is always busy.","She always is busy.","She is busy always."], a:"She is always busy.", ex:"always بعد is."},
   {q:"✔ on Monday and ✔ on Wednesday = ____", o:["twice a week","once a week","every day"], a:"twice a week", ex:"يومين في الأسبوع = مرتين."},
+  {q:"You borrow books from the ____.", o:["library","playground","classroom"], a:"library", ex:"المكتبة = library، نستعير منها الكتب."},
+  {q:"Children run and play in the ____.", o:["playground","library","science lab"], a:"playground", ex:"ساحة اللعب = playground."},
+  {q:"A ____ learns at school. A teacher teaches.", o:["student","headteacher","school nurse"], a:"student", ex:"الطالب = student."},
+  {q:"✅✅✅✅❌ (4 من 5 أيام) = ____", o:["usually","never","hardly ever"], a:"usually", ex:"تقريباً كل يوم = usually."},
+  {q:"❌❌❌❌❌ (0 من 5 أيام) = ____", o:["never","always","often"], a:"never", ex:"صفر مرات = never."},
+  {q:"I ____ eat in the library. (نادراً جداً)", o:["hardly ever","always","every day"], a:"hardly ever", ex:"نادراً جداً = hardly ever."},
+  {q:"Choose the correct sentence:", o:["He usually plays football.","He plays usually football.","Usually he plays football."], a:"He usually plays football.", ex:"usually تأتي قبل الفعل plays."},
+  {q:"We visit the science lab once a month. = ____", o:["مرة في الشهر","مرة في الأسبوع","كل يوم"], a:"مرة في الشهر", ex:"once a month = مرة في الشهر."},
   {q:"Who helps you at school when you feel ill?", o:["school nurse","headteacher","Art teacher"], a:"school nurse", ex:"ممرضة المدرسة تساعد المريض."},
   {q:"📗 Maryam's diary: How does Maryam feel before her first day?", o:["worried","happy","angry"], a:"worried", ex:"مريم كانت قلقة (worried) قبل يومها الأول."},
   {q:"📗 Maryam's diary: What is the name of her new friend?", o:["Muna","Zahra","Lottie"], a:"Muna", ex:"صديقتها الجديدة اسمها منى."},
@@ -399,14 +422,16 @@ const UNITS = [
 },
 {
  id:"u2", num:"2", color:"#FFD9C4", emoji:"🧺", title:"Picnic time!", ar:"وقت النزهة", pages:"ص 36–57",
- intro:"الأطعمة والمشروبات، العبوات، There is / There are، والتسوق.",
+ intro:"الأطعمة والمشروبات، العبوات، There is / There are مع كلمات الكمية، والتسوق.",
  vocab:[
   {g:"Food & drinks – الطعام والمشروبات", items:[
    ["🍎","fruit","فواكه"],["🥕","vegetables","خضروات"],["🥪","sandwiches","سندويشات"],["🥣","cereal","رقائق الإفطار"],["🍜","noodles","نودلز"],["🥤","milkshake","ميلك شيك"],
    ["🥔","crisps","شيبس (بطاطس مقرمشة)"],["🧁","cupcakes","كب كيك"],["🥗","salad","سلطة"],["🍵","tea","شاي"],["☕","coffee","قهوة"],["🍋","lemonade","عصير ليمون"]]},
   {g:"Containers – العبوات", items:[
    ["🥫","a can of lemonade","علبة ليمون"],["💧","a bottle of water","قنينة ماء"],["🍲","a bowl of soup","وعاء شوربة"],["☕","a cup of coffee","فنجان قهوة"],
-   ["🥛","a glass of milk","كأس حليب"],["🍽️","a plate of sandwiches","صحن سندويشات"],["📦","a box of cereal","علبة رقائق"],["🛍️","a bag of fruit","كيس فواكه"]]}
+   ["🥛","a glass of milk","كأس حليب"],["🍽️","a plate of sandwiches","صحن سندويشات"],["📦","a box of cereal","علبة رقائق"],["🛍️","a bag of fruit","كيس فواكه"]]},
+  {g:"Quantity words – كلمات الكمية", items:[
+   ["🏔️","a lot of","كثير"],["🤲","some","بعض"],["💧","a little","قليل (لما لا نعدّه)"],["✌️","a few","قليل (لما نعدّه)"],["🚫","isn't any","لا يوجد أي (مفرد / لا يُعد)"],["⛔","aren't any","لا يوجد أي (جمع)"]]}
  ],
  grammar:[
   {t:"There is / There are", tar:"يوجد", page:"ص 40",
@@ -419,6 +444,11 @@ const UNITS = [
    en:"<b>a few</b> + countable (a few sandwiches). <b>a little</b> + uncountable (a little lemonade). <b>a lot of</b> and <b>some</b> go with both.",
    ex:[["There are a lot of noodles, some crisps and a few sandwiches.","كثير من النودلز وبعض الشيبس وقليل من السندويشات."],["There is a lot of salad, some coffee and a little lemonade.","كثير من السلطة وبعض القهوة وقليل من الليمون."]],
    mini:{q:"There's ____ lemonade.", o:["a little","a few","many"], a:"a little", ex:"lemonade لا يُعدّ ← a little."}},
+  {t:"is / are + quantity words", tar:"is و are مع كلمات الكمية", page:"مراجعة القواعد",
+   ar:"نختار <b class='en'>is</b> أو <b class='en'>are</b> حسب الشيء، ثم نختار كلمة الكمية:<br>🥤 <b class='en'>There is</b> مع الذي <b>لا نعدّه</b>: lemonade, salad, bread, tea, coffee, cereal, milkshake, fruit.<br>🥪 <b class='en'>There are</b> مع الذي <b>نعدّه</b>: sandwiches, cupcakes, crisps, noodles, carrots.<div class='scroll'><table class='tt en'><tr><th>الكمية</th><th>There is (لا يُعد)</th><th>There are (يُعد)</th></tr><tr><td>كثير 🏔️</td><td>a lot of</td><td>a lot of</td></tr><tr><td>بعض 🤲</td><td>some</td><td>some</td></tr><tr><td>قليل</td><td>a little 💧</td><td>a few ✌️</td></tr><tr><td>لا شيء 🚫</td><td>isn't any</td><td>aren't any</td></tr></table></div>انتبه: <span class='en'>a little</span> فقط مع is، و<span class='en'>a few</span> فقط مع are!",
+   en:"<b>There is</b> + uncountable: a lot of / some / a little / isn't any. <b>There are</b> + plural: a lot of / some / a few / aren't any.",
+   ex:[["There is a lot of lemonade.","🍋🍋🍋🍋🍋 يوجد الكثير من عصير الليمون."],["There is some lemonade.","🍋🍋 يوجد بعض عصير الليمون."],["There is a little lemonade.","🍋 يوجد قليل من عصير الليمون."],["There isn't any lemonade.","🫙 لا يوجد أي عصير ليمون."],["There are a lot of sandwiches.","🥪🥪🥪🥪🥪🥪 يوجد الكثير من السندويشات."],["There are some sandwiches.","🥪🥪🥪 يوجد بعض السندويشات."],["There are a few sandwiches.","🥪🥪 يوجد قليل من السندويشات."],["There aren't any sandwiches.","🍽️ لا يوجد أي سندويشات."]],
+   mini:{q:"There ____ a few carrots.", o:["are","is","isn't"], a:"are", ex:"a few مع الجمع، والجمع يأخذ are."}},
   {t:"any: negatives & questions", tar:"any في النفي والسؤال", page:"ص 40–41",
    ar:"في النفي والسؤال نستخدم <b class='en'>any</b>.<br><span class='en'>There isn't any bread.</span> • <span class='en'>There aren't any cupcakes.</span><br>السؤال والجواب:<br><span class='en'>Are there any apples? — Yes, there are. / No, there aren't.</span><br><span class='en'>Is there any coffee? — Yes, there is. / No, there isn't.</span>",
    en:"Use <b>any</b> in negatives and questions. Answer with the same verb: <b>Is</b> there …? — Yes, there <b>is</b>. <b>Are</b> there …? — No, there <b>aren't</b>.",
@@ -454,7 +484,14 @@ const UNITS = [
     {p:"👦 <span class='en'>Is there any milk?</span>",o:["Yes, there is.","Yes, there are.","Yes, I am."],a:"Yes, there is."},
     {p:"👦 <span class='en'>Are there any eggs?</span>",o:["No, there aren't.","No, there isn't.","No, I'm not."],a:"No, there aren't."}]},
   {type:"build", e:"🧱", t:"Sentence builder", tar:"رتّب الجملة", items:[
-    ["There aren't any cupcakes.","لا يوجد أي كب كيك."],["Is there any coffee?","هل يوجد قهوة؟"],["Can I have some grapes, please?","ممكن بعض العنب من فضلك؟"],["There's a little lemonade.","يوجد قليل من الليمون."]]}
+    ["There aren't any cupcakes.","لا يوجد أي كب كيك."],["Is there any coffee?","هل يوجد قهوة؟"],["Can I have some grapes, please?","ممكن بعض العنب من فضلك؟"],["There's a little lemonade.","يوجد قليل من الليمون."]]},
+  {type:"sort", e:"🔀", t:"is or are?", tar:"is أم are؟", buckets:[["is","There is","☝️"],["are","There are","✌️"]],
+   items:[["bread","is"],["salad","is"],["cereal","is"],["lemonade","is"],["tea","is"],["coffee","is"],["milkshake","is"],["fruit","is"],["sandwiches","are"],["cupcakes","are"],["noodles","are"],["crisps","are"],["carrots","are"],["vegetables","are"]]},
+  {type:"pick", e:"🖼️", t:"Picture sentences", tar:"اختر الجملة المناسبة للصورة", items:[{p:"🥪🥪🥪🥪🥪🥪<div style='font-size:15px'>sandwiches — كثير</div>",o:["There are a lot of sandwiches.", "There are a few sandwiches.", "There aren't any sandwiches."],a:"There are a lot of sandwiches."},{p:"🥪🥪<div style='font-size:15px'>sandwiches — قليل</div>",o:["There are a few sandwiches.", "There are a lot of sandwiches.", "There aren't any sandwiches."],a:"There are a few sandwiches."},{p:"🍽️<div style='font-size:15px'>sandwiches — الصحن فاضي</div>",o:["There aren't any sandwiches.", "There are some sandwiches.", "There isn't any sandwiches."],a:"There aren't any sandwiches."},{p:"🥤🥤🥤🥤🥤🥤<div style='font-size:15px'>lemonade — كثير</div>",o:["There is a lot of lemonade.", "There is a little lemonade.", "There isn't any lemonade."],a:"There is a lot of lemonade."},{p:"🥤<div style='font-size:15px'>lemonade — كأس واحد فقط</div>",o:["There is a little lemonade.", "There is a lot of lemonade.", "There are a few lemonade."],a:"There is a little lemonade."},{p:"🫙<div style='font-size:15px'>lemonade — الإبريق فاضي</div>",o:["There isn't any lemonade.", "There is some lemonade.", "There aren't any lemonade."],a:"There isn't any lemonade."}]},
+  {type:"pick", e:"✏️", t:"Complete the chart", tar:"أكمل بكلمة الكمية الصحيحة", items:[{p:"There ____ a lot of crisps. 🥔",o:["are", "is", "isn't"],a:"are"},{p:"There ____ some salad. 🥗",o:["is", "are", "aren't"],a:"is"},{p:"There is ____ lemonade. 🥤 (قليل)",o:["a little", "a few", "aren't any"],a:"a little"},{p:"There are ____ sandwiches. 🥪 (قليل)",o:["a few", "a little", "isn't any"],a:"a few"},{p:"There isn't ____ bread. 🍞",o:["any", "some", "a few"],a:"any"},{p:"There aren't ____ carrots. 🥕",o:["any", "a little", "is"],a:"any"},{p:"There are ____ cupcakes. 🧁 (كثير)",o:["a lot of", "a little", "isn't any"],a:"a lot of"},{p:"There is ____ tea. 🍵 (بعض)",o:["some", "a few", "aren't any"],a:"some"}]},
+  {type:"match", e:"🔤", t:"Quantity words", tar:"طابق كلمة الكمية مع معناها", pairs:[["a lot of","كثير"],["some","بعض"],["a little","قليل (لا يُعد)"],["a few","قليل (يُعد)"],["isn't any","لا يوجد أي"]]},
+  {type:"build", e:"🧱", t:"Quantity sentences", tar:"رتّب جمل الكمية", items:[
+    ["There is a lot of lemonade.","يوجد الكثير من عصير الليمون."],["There are a few sandwiches.","يوجد قليل من السندويشات."],["There isn't any lemonade.","لا يوجد أي عصير ليمون."],["There are some cupcakes.","يوجد بعض الكب كيك."]]}
  ],
  quiz:[
   {q:"There ____ some bread.", o:["is","are","am"], a:"is", ex:"bread لا يُعدّ ← is."},
@@ -468,6 +505,16 @@ const UNITS = [
   {q:"Seller: Anything else?  You: ____", o:["No, that's it, thanks.","Can I help you?","There isn't."], a:"No, that's it, thanks.", ex:"جواب مهذب يعني لا أريد شيئاً آخر."},
   {q:"📗 What is Rasha's favourite food?", o:["harees","pasta","sushi"], a:"harees", ex:"رشا تحب الهريس (ص 44)."},
   {q:"Which word do we use for the LAST step of a recipe?", o:["Last","First","Then"], a:"Last", ex:"Last = أخيراً."},
+  {q:"There ____ a lot of lemonade.", o:["is", "are", "aren't"], a:"is", ex:"lemonade لا يُعد ← There is."},
+  {q:"There ____ a few sandwiches.", o:["are", "is", "isn't"], a:"are", ex:"sandwiches جمع ← There are."},
+  {q:"There is ____ lemonade. (🥤 كأس واحد)", o:["a little", "a few", "aren't any"], a:"a little", ex:"lemonade لا يُعد ← a little."},
+  {q:"There are ____ sandwiches. (🥪🥪 اثنتان)", o:["a few", "a little", "isn't any"], a:"a few", ex:"sandwiches تُعد ← a few."},
+  {q:"There ____ any lemonade. (🫙 فاضي)", o:["isn't", "aren't", "is"], a:"isn't", ex:"lemonade مفرد ← isn't any."},
+  {q:"There ____ any sandwiches. (🍽️ فاضي)", o:["aren't", "isn't", "are"], a:"aren't", ex:"sandwiches جمع ← aren't any."},
+  {q:"Which is correct?", o:["There are a few cupcakes.", "There are a little cupcakes.", "There is a few cupcakes."], a:"There are a few cupcakes.", ex:"a few مع الجمع و are."},
+  {q:"Which is correct?", o:["There is a little salad.", "There is a few salad.", "There are a little salad."], a:"There is a little salad.", ex:"salad لا يُعد ← is a little."},
+  {q:"Which is correct?", o:["There isn't any bread.", "There aren't any bread.", "There isn't any breads."], a:"There isn't any bread.", ex:"bread لا يُعد ← isn't any."},
+  {q:"a lot of = ____", o:["كثير", "قليل", "لا شيء"], a:"كثير", ex:"a lot of = كثير."},
   {q:"Which word has the same sound as <span class='en'>snow</span>?", o:["nose","not","now"], a:"nose", ex:"ow و o-e نفس الصوت."}
  ]
 },
