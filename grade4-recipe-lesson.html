@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade 4 - Write about your favourite recipe</title>
+<style>
+  :root { --pink:#f48fb1; --mint:#a5d6a7; --sky:#90caf9; --sun:#ffe082; --ink:#333; --bg:#fff8fb; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: "Segoe UI", Tahoma, Arial, sans-serif; background:var(--bg); color:var(--ink); font-size:20px; line-height:1.6; }
+  header { background:var(--pink); color:#fff; text-align:center; padding:18px 12px; }
+  header h1 { margin:0; font-size:26px; }
+  main { max-width:720px; margin:0 auto; padding:14px; }
+  section { background:#fff; border-radius:18px; padding:18px; margin:16px 0; box-shadow:0 2px 8px rgba(0,0,0,.08); }
+  h2 { margin:0 0 10px; font-size:22px; color:#c2185b; }
+  .en { direction:ltr; text-align:left; }
+  .ar { direction:rtl; text-align:right; font-size:19px; color:#4a4a4a; }
+  .card-row { display:flex; flex-wrap:wrap; gap:10px; margin:10px 0; align-items:center; }
+  button { font-size:20px; padding:12px 18px; border:none; border-radius:14px; cursor:pointer; background:var(--sky); color:#111; min-height:52px; }
+  button:hover { filter:brightness(1.05); }
+  button.pick { background:var(--sun); }
+  button.ok { background:var(--mint); }
+  button.bad { background:#ef9a9a; }
+  button.done { background:#e0e0e0; color:#777; }
+  button.secondary { background:#eee; }
+  button.say { background:#fff3e0; min-width:52px; padding:10px 14px; }
+  .line { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .feedback { min-height:30px; font-weight:bold; margin-top:8px; }
+  .good { color:#2e7d32; } .wrong { color:#c62828; }
+  input[type=text] { font-size:20px; padding:10px; border:2px solid var(--sky); border-radius:12px; width:100%; margin:4px 0; }
+  .frame p { margin:10px 0; }
+  .frame input { width:auto; min-width:150px; display:inline-block; }
+  .model { background:#fff3e0; border-radius:12px; padding:12px; direction:ltr; text-align:left; }
+  .ingredients { background:#e8f5e9; border-radius:12px; padding:12px; }
+  .quiz-q { margin:12px 0; }
+</style>
+</head>
+<body>
+<header>
+  <h1>My Favourite Recipe · وصفتي المفضلة</h1>
+  <div class="en">Pasta with Tomato Sauce</div>
+</header>
+<main>
+
+<!-- 1. Explanation -->
+<section>
+  <h2>1. Words for steps · كلمات ترتيب الخطوات</h2>
+  <p class="ar">نستخدم كلمات الترتيب لنعرف أي خطوة نفعلها أولاً وأيها أخيراً. مثلاً: First = أولاً، Then = ثم، After that = بعد ذلك، Last = أخيراً.</p>
+  <div class="en">
+    <div class="line"><p><b>First,</b> put the water and pasta in the pot.</p><button class="say" onclick="speak('First, put the water and pasta in the pot.')" aria-label="Listen">🔊</button></div>
+    <div class="line"><p><b>After that,</b> cook the pasta.</p><button class="say" onclick="speak('After that, cook the pasta.')" aria-label="Listen">🔊</button></div>
+    <div class="line"><p><b>Then</b> add the tomatoes and olive oil.</p><button class="say" onclick="speak('Then add the tomatoes and olive oil.')" aria-label="Listen">🔊</button></div>
+    <div class="line"><p><b>Last,</b> put the sauce on the pasta. Yum!</p><button class="say" onclick="speak('Last, put the sauce on the pasta. Yum!')" aria-label="Listen">🔊</button></div>
+  </div>
+  <h2 style="margin-top:16px">Verbs · الأفعال</h2>
+  <p class="ar">الأفعال في وصفات الطبخ تأتي في بداية الجملة وتكون بدون "to". مثلاً: put = ضع، add = أضف، cook = اطبخ، stir = حرّك.</p>
+  <div class="en"><div class="line"><p>Cook (not "to cook"). Put the pasta. Add the oil. Stir the sauce.</p><button class="say" onclick="speak('Cook. Put the pasta. Add the oil. Stir the sauce.')" aria-label="Listen">🔊</button></div></div>
+</section>
+
+<!-- 2. Ingredients -->
+<section>
+  <h2>2. Ingredients · المكونات (for 2 people)</h2>
+  <div class="ingredients en"><div class="line">Tomatoes · Olive oil · Pasta · Water <button class="say" onclick="speak('Tomatoes. Olive oil. Pasta. Water.')" aria-label="Listen">🔊</button></div></div>
+  <p class="ar">اضغط على المكونات الصحيحة فقط، واستمع للكلمة قبل الضغط إذا احتجت.</p>
+  <div class="card-row" id="ing-row"></div>
+  <div class="feedback" id="ing-fb"></div>
+</section>
+
+<!-- 3. Order game -->
+<section>
+  <h2>3. Put the steps in order · رتّب الخطوات</h2>
+  <p class="ar">اضغط على الخطوات بالترتيب الصحيح من الأول إلى الأخير.</p>
+  <div class="card-row" id="order-pool"></div>
+  <p class="en"><b>Your order:</b></p>
+  <div class="card-row" id="order-chosen"></div>
+  <div class="card-row">
+    <button onclick="checkOrder()">Check ✔ · تحقق</button>
+    <button class="secondary" onclick="resetOrder()">Reset · إعادة</button>
+  </div>
+  <div class="feedback" id="order-fb"></div>
+</section>
+
+<!-- 4. Match -->
+<section>
+  <h2>4. Match the words · صل الكلمة بمعناها</h2>
+  <p class="ar">اضغط على كلمة إنجليزية ثم على معناها العربي. الكلمة الإنجليزية تُقرأ لك عند الضغط عليها.</p>
+  <div class="card-row" id="match-en"></div>
+  <div class="card-row" id="match-ar"></div>
+  <div class="feedback" id="match-fb"></div>
+</section>
+
+<!-- 5. Writing frame -->
+<section class="frame">
+  <h2>5. My recipe · وصفتي</h2>
+  <p class="ar">اكتب جملك في الفراغات. (Tip: كلمة favourite مكتوبة هكذا بالضبط.)</p>
+  <div class="en">
+    <p>My favourite recipe is <input type="text" id="w1" placeholder="pasta"> .</p>
+    <p>Ingredients: <input type="text" id="w2" placeholder="tomatoes, olive oil, pasta, water"> .</p>
+    <p><b>First,</b> put <input type="text" id="w3" placeholder="the water and pasta"> in the pot.</p>
+    <p><b>After that,</b> cook the pasta.</p>
+    <p><b>Then</b> add <input type="text" id="w4" placeholder="the tomatoes and olive oil"> and cook.</p>
+    <p><b>Last,</b> put the sauce on the pasta. Yum!</p>
+  </div>
+  <div class="card-row">
+    <button onclick="checkFrame()">Check ✔ · تحقق</button>
+    <button class="secondary" onclick="showModel()">Show model · نموذج</button>
+    <button class="say" onclick="speak(document.getElementById('model').innerText)" aria-label="Listen">🔊</button>
+  </div>
+  <div class="feedback" id="frame-fb"></div>
+  <div class="model en" id="model" style="display:none">
+    My favourite recipe is pasta.<br>
+    Ingredients: tomatoes, olive oil, pasta, water.<br>
+    First, put the water and pasta in the pot. After that, cook the pasta. Then add the tomatoes and olive oil and cook. Last, put the sauce on the pasta. Yum!
+  </div>
+</section>
+
+<!-- 6. Quiz -->
+<section>
+  <h2>6. Quick quiz · اختبار سريع</h2>
+  <div class="quiz-q en">
+    <div class="line"><p>1. Which word comes first? · أي كلمة تأتي أولاً؟</p><button class="say" onclick="speak('Which word comes first?')" aria-label="Listen">🔊</button></div>
+    <div class="card-row">
+      <button onclick="answerQ(this,false,'q1')">Last</button>
+      <button onclick="answerQ(this,true,'q1')">First</button>
+      <button onclick="answerQ(this,false,'q1')">Yum</button>
+    </div>
+  </div>
+  <div class="quiz-q en">
+    <div class="line"><p>2. Which verb means "اطبخ"? · أي فعل يعني اطبخ؟</p><button class="say" onclick="speak('Which verb means cook?')" aria-label="Listen">🔊</button></div>
+    <div class="card-row">
+      <button onclick="answerQ(this,false,'q2')">put</button>
+      <button onclick="answerQ(this,true,'q2')">cook</button>
+      <button onclick="answerQ(this,false,'q2')">add</button>
+    </div>
+  </div>
+  <div class="quiz-q en">
+    <div class="line"><p>3. Which word is the last step? · أي كلمة تدل على الخطوة الأخيرة؟</p><button class="say" onclick="speak('Which word is the last step?')" aria-label="Listen">🔊</button></div>
+    <div class="card-row">
+      <button onclick="answerQ(this,false,'q3')">First</button>
+      <button onclick="answerQ(this,false,'q3')">Then</button>
+      <button onclick="answerQ(this,true,'q3')">Last</button>
+    </div>
+  </div>
+  <div class="feedback" id="quiz-fb"></div>
+</section>
+
+</main>
+<script>
+// ---------- audio (browser speech, en-GB) ----------
+let voice=null;
+function pickVoice(){ try{ const v=speechSynthesis.getVoices(); voice=v.find(x=>/en-GB/i.test(x.lang))||v.find(x=>/^en/i.test(x.lang))||null; }catch(e){} }
+if("speechSynthesis" in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
+function speak(t){
+  try{
+    if(!("speechSynthesis" in window)) return;
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(t.replace(/_+/g," blank "));
+    u.lang="en-GB"; if(voice) u.voice=voice; u.rate=.85; u.pitch=1.1;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+// ---------- data ----------
+const ingredients = ["Tomatoes","Olive oil","Pasta","Water","Milk","Sugar"];
+const ingredientsCorrect = {"Tomatoes":true,"Olive oil":true,"Pasta":true,"Water":true,"Milk":false,"Sugar":false};
+
+const steps = [
+  {text:"Last, put the sauce on the pasta. Yum!", n:4},
+  {text:"After that, cook the pasta.", n:2},
+  {text:"Then add the tomatoes and olive oil and cook.", n:3},
+  {text:"First, put the water and pasta in the pot.", n:1}
+];
+
+const matchPairs = [
+  ["First","أولاً"],["Then","ثم"],["After that","بعد ذلك"],["Last","أخيراً"],
+  ["put","ضع"],["add","أضف"],["cook","اطبخ"],["stir","حرّك"]
+];
+
+// ---------- helpers ----------
+function shuffle(a){ return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]); }
+function fb(id, msg, ok){ const el=document.getElementById(id); el.textContent=msg; el.className="feedback "+(ok?"good":"wrong"); }
+
+// ---------- 2. ingredients ----------
+function renderIngredients(){
+  const row=document.getElementById("ing-row"); row.innerHTML="";
+  shuffle(ingredients).forEach(name=>{
+    const b=document.createElement("button"); b.textContent=name;
+    b.onclick=()=>{
+      speak(name);
+      if(b.classList.contains("done")) return;
+      if(ingredientsCorrect[name]){ b.classList.add("ok","done"); fb("ing-fb","Yes! "+name+" is in the recipe. ✔",true); }
+      else { b.classList.add("bad"); fb("ing-fb",name+" is not in this recipe. Try again.",false); setTimeout(()=>b.classList.remove("bad"),700); }
+    };
+    row.appendChild(b);
+  });
+}
+
+// ---------- 3. order ----------
+let chosen=[];
+function renderOrder(){
+  const pool=document.getElementById("order-pool"); pool.innerHTML="";
+  const ch=document.getElementById("order-chosen"); ch.innerHTML="";
+  shuffle(steps).forEach(s=>{
+    const b=document.createElement("button"); b.textContent=s.text; b.className="pick";
+    b.onclick=()=>{ if(chosen.includes(s)) return; chosen.push(s); speak(s.text); renderOrder(); };
+    if(chosen.includes(s)){ b.className="done"; b.disabled=true; }
+    pool.appendChild(b);
+  });
+  chosen.forEach(s=>{ const b=document.createElement("button"); b.textContent=(chosen.indexOf(s)+1)+". "+s.text; b.className="secondary"; b.onclick=()=>{ chosen=chosen.filter(x=>x!==s); renderOrder(); }; ch.appendChild(b); });
+}
+function checkOrder(){
+  if(chosen.length<steps.length){ fb("order-fb","Choose all 4 steps first.",false); return; }
+  const ok = chosen.every((s,i)=>s.n===i+1);
+  const msg = ok ? "Perfect order! First → After that → Then → Last 🎉" : "Not yet. Look for First, After that, Then, Last.";
+  fb("order-fb", msg, ok);
+  speak(msg);
+}
+function resetOrder(){ chosen=[]; document.getElementById("order-fb").textContent=""; renderOrder(); }
+
+// ---------- 4. match ----------
+let selEn=null, selAr=null, matched=0;
+function renderMatch(){
+  matched=0; selEn=null; selAr=null;
+  const en=document.getElementById("match-en"), ar=document.getElementById("match-ar");
+  en.innerHTML=""; ar.innerHTML="";
+  matchPairs.forEach(p=>{
+    const b=document.createElement("button"); b.textContent=p[0]; b.dataset.key=p[0];
+    b.onclick=()=>{ speak(p[0]); pickMatch("en",b,p[0]); }; en.appendChild(b);
+  });
+  shuffle(matchPairs).forEach(p=>{
+    const b=document.createElement("button"); b.textContent=p[1]; b.dataset.key=p[0]; b.dir="rtl";
+    b.onclick=()=>pickMatch("ar",b,p[0]); ar.appendChild(b);
+  });
+  document.getElementById("match-fb").textContent="";
+}
+function pickMatch(side,btn,key){
+  if(btn.classList.contains("done")) return;
+  if(side==="en"){ document.querySelectorAll("#match-en button").forEach(x=>x.classList.remove("pick")); btn.classList.add("pick"); selEn=btn; }
+  else { document.querySelectorAll("#match-ar button").forEach(x=>x.classList.remove("pick")); btn.classList.add("pick"); selAr=btn; }
+  if(selEn && selAr){
+    if(selEn.dataset.key===selAr.dataset.key){
+      [selEn,selAr].forEach(x=>{x.classList.remove("pick"); x.classList.add("ok","done");});
+      matched++;
+      const msg = matched===matchPairs.length ? "All matched! 🌟" : "Correct! ✔";
+      fb("match-fb", msg, true); speak(selEn.dataset.key);
+    } else {
+      [selEn,selAr].forEach(x=>{x.classList.add("bad"); setTimeout(()=>{x.classList.remove("bad","pick");},600);});
+      fb("match-fb","Try again.",false);
+    }
+    selEn=null; selAr=null;
+  }
+}
+
+// ---------- 5. frame ----------
+const frameRules = {
+  w1:["pasta"], w2:["tomato","olive","pasta","water"],
+  w3:["water","pasta"], w4:["tomato","olive"]
+};
+function checkFrame(){
+  let all=true;
+  for(const id in frameRules){
+    const v=document.getElementById(id).value.trim().toLowerCase();
+    const ok = v.length>0 && frameRules[id].some(k=>v.includes(k));
+    document.getElementById(id).style.borderColor = ok ? "#66bb6a" : "#ef5350";
+    if(!ok) all=false;
+  }
+  const msg = all ? "Great writing! Your recipe is complete 👏" : "Some blanks need a word from the recipe. Check the red boxes.";
+  fb("frame-fb", msg, all); speak(msg);
+}
+function showModel(){ const m=document.getElementById("model"); m.style.display = m.style.display==="none" ? "block" : "none"; }
+
+// ---------- 6. quiz ----------
+const answered={};
+function answerQ(btn,correct,qid){
+  if(answered[qid]) return;
+  answered[qid]=true;
+  btn.classList.add(correct?"ok":"bad");
+  const total=Object.keys(answered).length;
+  const msg = correct ? "Correct! ✔" : "Not quite. Think about the meaning.";
+  fb("quiz-fb", msg, correct); speak(msg);
+  if(total===3) fb("quiz-fb","Quiz finished! Look at the green answers. 🎉",true);
+}
+
+renderIngredients(); renderOrder(); renderMatch();
+</script>
+</body>
+</html>
