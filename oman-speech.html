@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Country Oman · عُمان بلدي</title>
+<style>
+  :root { --red:#e53935; --white:#fff; --green:#2e7d32; --gold:#f9a825; --ink:#2b2b2b; --bg:#f4fbf6; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Segoe UI", Tahoma, Arial, sans-serif; background:var(--bg); color:var(--ink); font-size:21px; line-height:1.6; }
+  header { background:linear-gradient(90deg,var(--red) 0 33%,#fff 33% 66%,var(--green) 66%); color:#222; text-align:center; padding:0; }
+  header .band { background:rgba(255,255,255,.92); margin:0; padding:16px 12px; }
+  header h1 { margin:0; font-size:28px; color:var(--green); }
+  header .ar { font-size:22px; color:#444; direction:rtl; }
+  main { max-width:720px; margin:0 auto; padding:14px; }
+  section { background:#fff; border-radius:18px; padding:18px; margin:16px 0; box-shadow:0 2px 8px rgba(0,0,0,.08); }
+  h2 { margin:0 0 10px; font-size:23px; color:var(--green); }
+  button { font-size:20px; padding:12px 18px; border:none; border-radius:14px; cursor:pointer; background:#bbdefb; color:#111; min-height:52px; }
+  button:hover { filter:brightness(1.05); }
+  button.primary { background:var(--green); color:#fff; font-weight:bold; }
+  button.say { background:var(--gold); min-width:56px; padding:10px 14px; }
+  button.ok { background:#a5d6a7; } button.bad { background:#ef9a9a; }
+  .controls { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:8px 0 14px; }
+  .speed { font-size:17px; }
+  .line { display:flex; gap:12px; align-items:flex-start; padding:12px; border-radius:14px; border:2px solid #e0f2e1; margin:10px 0; transition:background .3s; }
+  .line.now { background:#fff8e1; border-color:var(--gold); }
+  .line .txt { flex:1; }
+  .line .en { font-size:22px; font-weight:600; direction:ltr; text-align:left; }
+  .line .ar { font-size:18px; color:#555; direction:rtl; text-align:right; margin-top:4px; }
+  .hidden-mode .line .en, .hidden-mode .line .ar { filter:blur(7px); user-select:none; }
+  .hidden-mode .line:hover .en, .hidden-mode .line:hover .ar, .hidden-mode .line.reveal .en, .hidden-mode .line.reveal .ar { filter:none; }
+  .bank { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0; }
+  .bank span { background:#e8f5e9; border-radius:10px; padding:6px 12px; font-weight:bold; }
+  .q { direction:ltr; text-align:left; margin:12px 0; font-size:21px; }
+  .q input { font-size:20px; padding:8px; width:180px; border:2px solid #90caf9; border-radius:10px; }
+  .feedback { min-height:30px; font-weight:bold; margin-top:8px; }
+  .good { color:#2e7d32; } .wrong { color:#c62828; }
+  footer { text-align:center; color:#666; padding:10px 0 24px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="band">
+    <h1>🇴🇲 My Country: Oman</h1>
+    <div class="ar">عُمان بلدي</div>
+  </div>
+</header>
+<main>
+
+<!-- 1. Speech -->
+<section id="speech-section">
+  <h2>My speech · كلمتي</h2>
+  <p class="ar" style="margin:0 0 10px">اضغط ▶ واستمع للكلمة كاملة، أو اضغط 🔊 بجانب أي جملة لتسمعها وحدها. الجمل بالعربي للمساعدة في الفهم.</p>
+  <div class="controls">
+    <button class="primary" id="playAll" onclick="playAll()">▶ Play all · استمع للكل</button>
+    <button onclick="stopAll()">■ Stop · إيقاف</button>
+    <label class="speed">Speed:
+      <select id="speed">
+        <option value="0.7">Slow · بطيء</option>
+        <option value="0.85" selected>Normal · عادي</option>
+        <option value="1">Fast · سريع</option>
+      </select>
+    </label>
+  </div>
+  <div class="controls">
+    <button id="hideBtn" onclick="toggleHide()">🙈 Hide text · إخفاء النص (للحفظ)</button>
+  </div>
+  <div id="lines"></div>
+</section>
+
+<!-- 2. Memory game -->
+<section>
+  <h2>Fill in the blanks · أكمل الفراغات</h2>
+  <p class="ar">اختر الكلمة المناسبة من البنك واكتبها.</p>
+  <div class="bank">
+    <span>colours</span><span>bravery</span><span>nature</span><span>peace</span><span>beautiful</span>
+  </div>
+  <div class="q">1. The Omani flag has three ____. <input id="b1"></div>
+  <div class="q">2. Red means ____. <input id="b2"></div>
+  <div class="q">3. Green means ____. <input id="b3"></div>
+  <div class="q">4. Oman is ____ and peaceful. <input id="b4"></div>
+  <div class="controls">
+    <button class="primary" onclick="checkBlanks()">Check ✔ · تحقق</button>
+    <button onclick="clearBlanks()">Clear · مسح</button>
+  </div>
+  <div class="feedback" id="blank-fb"></div>
+</section>
+
+<!-- 3. Sort the speech -->
+<section>
+  <h2>Put the sentences in order · رتّب الجمل</h2>
+  <p class="ar">اضغط الجمل بالترتيب الصحيح كما في الكلمة.</p>
+  <div class="controls" id="sortPool"></div>
+  <p class="en" style="direction:ltr">Your order:</p>
+  <div class="controls" id="sortChosen"></div>
+  <div class="controls">
+    <button class="primary" onclick="checkSort()">Check ✔ · تحقق</button>
+    <button onclick="resetSort()">Reset · إعادة</button>
+  </div>
+  <div class="feedback" id="sort-fb"></div>
+</section>
+
+</main>
+<footer>Oman · عُمان ❤️</footer>
+
+<script>
+// ---------- speech content (simplified for children) ----------
+const lines = [
+  {en:"Good morning, everyone!", ar:"صباح الخير يا جماعة!"},
+  {en:"My name is ______.", ar:"اسمي ______."},
+  {en:"Today, I will talk about my country, Oman.", ar:"اليوم، سأتحدث عن بلدي عُمان."},
+  {en:"I love Oman. Oman is beautiful and peaceful.", ar:"أحب عُمان. عُمان جميلة وهادئة."},
+  {en:"First, let me talk about the Omani flag.", ar:"أولاً، دعوني أتحدث عن علم عُمان."},
+  {en:"The flag has three colours: red, white, and green.", ar:"العلم فيه ثلاثة ألوان: أحمر، وأبيض، وأخضر."},
+  {en:"Red means bravery.", ar:"الأحمر يعني الشجاعة."},
+  {en:"White means peace.", ar:"الأبيض يعني السلام."},
+  {en:"Green means nature.", ar:"الأخضر يعني الطبيعة."},
+  {en:"Now, let me talk about Omani traditional clothes.", ar:"الآن، دعوني أتحدث عن الملابس العمانية التقليدية."},
+  {en:"Omani men wear a white dishdasha and a kumma.", ar:"الرجال العمانيون يرتدون الدشداشة البيضاء والكمّة."},
+  {en:"Omani women wear beautiful, colourful dresses and scarves.", ar:"النساء العمانيات يرتدين فساتين جميلة وملونة وأوشحة."},
+  {en:"I love our traditional clothes.", ar:"أحب ملابسنا التقليدية."},
+  {en:"I am proud to be Omani.", ar:"أنا فخور بأنني عُماني."},
+  {en:"I love you, Oman! 🇴🇲❤️", ar:"أحبك يا عُمان!"},
+  {en:"Thank you for listening!", ar:"شكراً لاستماعكم!"}
+];
+
+// ---------- voice ----------
+let voice=null;
+function pickVoice(){ try{ const v=speechSynthesis.getVoices(); voice=v.find(x=>/en-GB/i.test(x.lang))||v.find(x=>/^en/i.test(x.lang))||null; }catch(e){} }
+if("speechSynthesis" in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
+function speedVal(){ return parseFloat(document.getElementById("speed").value); }
+function speakText(text, onend){
+  if(!("speechSynthesis" in window)){ if(onend) onend(); return; }
+  speechSynthesis.cancel();
+  const clean=text.replace(/[🇴🇲❤️]/g,"").replace(/_+/g," blank ");
+  const u=new SpeechSynthesisUtterance(clean);
+  u.lang="en-GB"; if(voice) u.voice=voice; u.rate=speedVal(); u.pitch=1.1;
+  if(onend) u.onend=onend;
+  speechSynthesis.speak(u);
+}
+function say(i){ document.querySelectorAll(".line").forEach(l=>l.classList.remove("now")); const el=document.getElementById("line"+i); if(el) el.classList.add("now"); speakText(lines[i].en); }
+let playing=false, playIdx=0;
+function playAll(){
+  stopAll(); playing=true; playIdx=0; next();
+}
+function next(){
+  if(!playing || playIdx>=lines.length){ stopAll(); return; }
+  const i=playIdx;
+  document.querySelectorAll(".line").forEach(l=>l.classList.remove("now"));
+  const el=document.getElementById("line"+i); if(el){ el.classList.add("now"); el.scrollIntoView({block:"center",behavior:"smooth"}); }
+  speakText(lines[i].en, ()=>{ playIdx++; setTimeout(next,500); });
+}
+function stopAll(){ playing=false; try{speechSynthesis.cancel()}catch(e){} document.querySelectorAll(".line").forEach(l=>l.classList.remove("now")); }
+
+// ---------- render speech ----------
+function renderLines(){
+  const box=document.getElementById("lines");
+  box.innerHTML = lines.map((l,i)=>`
+    <div class="line" id="line${i}" onclick="if(document.getElementById('speech-section').classList.contains('hidden-mode'))this.classList.toggle('reveal')">
+      <button class="say" onclick="event.stopPropagation();say(${i})" aria-label="Listen">🔊</button>
+      <div class="txt"><div class="en">${l.en}</div><div class="ar">${l.ar}</div></div>
+    </div>`).join("");
+}
+function toggleHide(){
+  const s=document.getElementById("speech-section");
+  const on=s.classList.toggle("hidden-mode");
+  document.getElementById("hideBtn").textContent = on ? "👀 Show text · إظهار النص" : "🙈 Hide text · إخفاء النص (للحفظ)";
+  document.querySelectorAll(".line").forEach(l=>l.classList.remove("reveal"));
+}
+
+// ---------- blanks ----------
+const blanks = {b1:["colour","color"], b2:["bravery","brave","courage"], b3:["nature"], b4:["beautiful"]};
+function checkBlanks(){
+  let all=true;
+  for(const id in blanks){
+    const v=document.getElementById(id).value.trim().toLowerCase();
+    const ok=blanks[id].some(a=>v.startsWith(a));
+    document.getElementById(id).style.borderColor = ok ? "#66bb6a" : "#ef5350";
+    if(!ok) all=false;
+  }
+  const msg = all ? "Excellent! 🌟 أحسنت!" : "Some answers are not right yet. Look at the red boxes. · بعض الإجابات تحتاج مراجعة";
+  const el=document.getElementById("blank-fb"); el.textContent=msg; el.className="feedback "+(all?"good":"wrong");
+  speakText(all ? "Excellent!" : "Try again.");
+}
+function clearBlanks(){ for(const id in blanks){ const e=document.getElementById(id); e.value=""; e.style.borderColor=""; } document.getElementById("blank-fb").textContent=""; }
+
+// ---------- sort ----------
+const sortTargets = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14];
+let sortChosen=[];
+function shuffle(a){ return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]); }
+let sortPool=[];
+function renderSort(){
+  const pool=document.getElementById("sortPool"); pool.innerHTML="";
+  const ch=document.getElementById("sortChosen"); ch.innerHTML="";
+  if(!sortPool.length) sortPool=shuffle(sortTargets.slice(0,6));
+  sortPool.forEach(i=>{
+    const b=document.createElement("button"); b.textContent=lines[i].en; b.style.textAlign="left";
+    if(sortChosen.includes(i)){ b.disabled=true; b.className=""; b.style.background="#e0e0e0"; }
+    b.onclick=()=>{ if(sortChosen.includes(i)) return; sortChosen.push(i); speakText(lines[i].en); renderSort(); };
+    pool.appendChild(b);
+  });
+  sortChosen.forEach(i=>{ const b=document.createElement("button"); b.textContent=(sortChosen.indexOf(i)+1)+". "+lines[i].en; b.style.textAlign="left"; b.onclick=()=>{ sortChosen=sortChosen.filter(x=>x!==i); renderSort(); }; ch.appendChild(b); });
+}
+function checkSort(){
+  const el=document.getElementById("sort-fb");
+  if(sortChosen.length<sortPool.length){ el.textContent="Choose all sentences first. · اختاري كل الجمل أولاً"; el.className="feedback wrong"; return; }
+  const expected = sortPool.slice().sort((a,b)=>a-b);
+  const ok = sortChosen.every((v,i)=>v===expected[i]);
+  el.textContent = ok ? "Perfect! 🎉 ممتاز!" : "Not yet. Think about the order of the speech. · حاولي مرة ثانية";
+  el.className = "feedback "+(ok?"good":"wrong");
+}
+function resetSort(){ sortChosen=[]; sortPool=[]; document.getElementById("sort-fb").textContent=""; renderSort(); }
+
+renderLines(); renderSort();
+</script>
+</body>
+</html>
